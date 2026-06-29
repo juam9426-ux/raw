@@ -50,6 +50,12 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 <!-- GENERADOR DE CÓDIGO LUA (nuevo, arriba) -->
 <div class="card">
   <h3>Generador de Código Lua</h3>
+  <label>Primer Link (RAW):</label>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:0.35rem;">
+    <div id="url1genDisplay" style="flex:1;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:0.6rem 0.75rem;font-family:Consolas,monospace;font-size:0.82rem;color:#c4b5fd;word-break:break-all;">https://pastefy.app/EPHCMCIX/raw</div>
+    <button class="btn-gray" style="flex:none;min-width:auto;padding:0.5rem 0.9rem;font-size:0.8rem;" onclick="toggleEditUrl1()">✏ Editar</button>
+  </div>
+  <input type="text" id="url1gen" value="https://pastefy.app/EPHCMCIX/raw" placeholder="https://pastefy.app/XXXXXXXX/raw" style="display:none;margin-top:6px;" oninput="document.getElementById('url1genDisplay').textContent=this.value||'https://pastefy.app/EPHCMCIX/raw'">
   <label>Segundo Link:</label>
   <input type="text" id="url2" placeholder="https://orrxl4-protector.com/api/raw?id=xxxxx">
   <div class="row">
@@ -178,7 +184,21 @@ async function subirPastefy() {
 }
 
 // Generador nuevo (arriba)
+function toggleEditUrl1() {
+  const input = document.getElementById('url1gen');
+  const btn = event.target;
+  if (input.style.display === 'none') {
+    input.style.display = 'block';
+    input.focus();
+    btn.textContent = '✔ Listo';
+  } else {
+    input.style.display = 'none';
+    btn.textContent = '✏ Editar';
+  }
+}
+
 function generar() {
+  const primero = document.getElementById('url1gen').value.trim() || 'https://pastefy.app/EPHCMCIX/raw';
   const segundo = document.getElementById('url2').value.trim();
   const codigo =
 `local function run(url)
@@ -198,7 +218,7 @@ function generar() {
         end
     end)
 end
-run("https://pastefy.app/EPHCMCIX/raw")
+run("${primero}")
 run("${segundo}")`;
   document.getElementById('loadResult').value = codigo;
 }
