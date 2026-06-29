@@ -6,101 +6,122 @@
 <title>Lua Obfuscator + Pastefy</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; padding: 2rem; }
-h1 { text-align: center; font-size: 1.6rem; margin-bottom: 0.3rem; color: #a78bfa; }
-p.sub { text-align: center; font-size: 0.85rem; color: #888; margin-bottom: 1.5rem; }
-.card { background: #1a1a1a; border: 1px solid #2e2e2e; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.2rem; }
-label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
-textarea { width: 100%; background: #0f0f0f; border: 1px solid #333; border-radius: 8px; color: #e0e0e0; font-family: 'Courier New', monospace; font-size: 0.85rem; padding: 0.75rem; resize: vertical; min-height: 160px; outline: none; transition: border-color 0.2s; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f172a; color: #e0e0e0; min-height: 100vh; padding: 2rem; display: flex; flex-direction: column; align-items: center; }
+h1 { font-size: 1.6rem; margin-bottom: 0.3rem; color: #a78bfa; text-align: center; }
+p.sub { font-size: 0.85rem; color: #888; margin-bottom: 1.5rem; text-align: center; }
+.wrap { width: 100%; max-width: 720px; }
+.card { background: #1e293b; border: 1px solid #2e3f58; border-radius: 12px; padding: 1.4rem; margin-bottom: 1.2rem; }
+.card h3 { font-size: 0.95rem; color: #a78bfa; margin-bottom: 1rem; letter-spacing: 0.04em; text-transform: uppercase; }
+label { display: block; font-size: 0.78rem; color: #94a3b8; margin-bottom: 0.35rem; margin-top: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+label:first-child { margin-top: 0; }
+textarea { width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; font-family: 'Consolas', monospace; font-size: 0.85rem; padding: 0.75rem; resize: vertical; min-height: 150px; outline: none; transition: border-color 0.2s; }
 textarea:focus { border-color: #7c3aed; }
-input[type=text] { width: 100%; background: #0f0f0f; border: 1px solid #333; border-radius: 8px; color: #e0e0e0; font-family: 'Courier New', monospace; font-size: 0.85rem; padding: 0.6rem 0.75rem; outline: none; transition: border-color 0.2s; }
+input[type=text] { width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; font-family: 'Consolas', monospace; font-size: 0.85rem; padding: 0.6rem 0.75rem; outline: none; transition: border-color 0.2s; }
 input[type=text]:focus { border-color: #7c3aed; }
-select { background: #0f0f0f; border: 1px solid #333; border-radius: 8px; color: #e0e0e0; padding: 0.5rem 0.75rem; width: 100%; font-size: 0.9rem; outline: none; }
-.row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-button { flex: 1; min-width: 140px; padding: 0.65rem 1rem; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
+.row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.85rem; }
+button { flex: 1; min-width: 130px; padding: 0.65rem 1rem; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s; }
 button:active { transform: scale(0.97); }
-button:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn-primary { background: #7c3aed; color: #fff; }
-.btn-primary:hover:not(:disabled) { background: #6d28d9; }
-.btn-success { background: #059669; color: #fff; }
-.btn-success:hover:not(:disabled) { background: #047857; }
-.btn-copy { background: #1f2937; color: #d1d5db; border: 1px solid #374151; }
-.btn-copy:hover { background: #374151; }
-.btn-link { background: #0369a1; color: #fff; }
-.btn-link:hover:not(:disabled) { background: #0284c7; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-purple { background: #7c3aed; color: #fff; }
+.btn-purple:hover:not(:disabled) { background: #6d28d9; }
+.btn-blue { background: #2563eb; color: #fff; }
+.btn-blue:hover:not(:disabled) { background: #1d4ed8; }
+.btn-green { background: #059669; color: #fff; }
+.btn-green:hover:not(:disabled) { background: #047857; }
+.btn-gray { background: #1e3a5a; color: #cbd5e1; border: 1px solid #334155; }
+.btn-gray:hover { background: #273f5c; }
+.btn-teal { background: #0e7490; color: #fff; }
+.btn-teal:hover:not(:disabled) { background: #0c6478; }
 .status { font-size: 0.82rem; padding: 0.5rem 0.75rem; border-radius: 6px; margin-top: 0.75rem; display: none; }
 .status.info { background: #1e3a5f; color: #93c5fd; display: block; }
-.status.ok { background: #064e3b; color: #6ee7b7; display: block; }
-.status.err { background: #450a0a; color: #fca5a5; display: block; }
+.status.ok   { background: #064e3b; color: #6ee7b7; display: block; }
+.status.err  { background: #450a0a; color: #fca5a5; display: block; }
 .raw-box { display: none; margin-top: 0.75rem; }
-.raw-url { background: #0f0f0f; border: 1px solid #7c3aed; border-radius: 8px; padding: 0.6rem 0.75rem; font-family: monospace; font-size: 0.8rem; color: #c4b5fd; word-break: break-all; }
-.result-box { background: #0f0f0f; border: 1px solid #2e2e2e; border-radius: 8px; padding: 0.6rem 0.75rem; font-family: 'Courier New', monospace; font-size: 0.85rem; color: #6ee7b7; min-height: 40px; word-break: break-all; }
+.raw-url { background: #0f172a; border: 1px solid #7c3aed; border-radius: 8px; padding: 0.6rem 0.75rem; font-family: monospace; font-size: 0.8rem; color: #c4b5fd; word-break: break-all; }
 .badge { display: inline-block; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; margin-left: 8px; background: #3b0764; color: #c4b5fd; vertical-align: middle; }
 </style>
 </head>
 <body>
+<div class="wrap">
 
 <h1>⬡ Lua Obfuscator + Pastefy</h1>
-<p class="sub">Ofusca tu código Lua con escape numérico de caracteres y súbelo a Pastefy</p>
+<p class="sub">Ofusca tu código Lua, súbelo a Pastefy y genera tu loadstring</p>
 
-<!-- INPUT -->
+<!-- GENERADOR DE CÓDIGO LUA (nuevo, arriba) -->
 <div class="card">
-  <label>Código Lua original</label>
-  <textarea id="inputCode" placeholder="Pega aquí tu código Lua..."></textarea>
-  <div style="margin-top:0.75rem;">
-    <label>Modo de ofuscación</label>
-    <select id="level">
-      <option value="1">Básico — strings con escape numérico (\066\080...)</option>
-      <option value="2" selected>Medio — strings + variables renombradas con índices</option>
-      <option value="3">Máximo — strings + tabla + decoder + junk vars</option>
-    </select>
+  <h3>Generador de Código Lua</h3>
+  <label>Segundo Link:</label>
+  <input type="text" id="url2" placeholder="https://orrxl4-protector.com/api/raw?id=xxxxx">
+  <div class="row">
+    <button class="btn-blue" onclick="generar()">Generar Código</button>
   </div>
-  <div class="row" style="margin-top:0.75rem;">
-    <button class="btn-primary" onclick="ofuscar()">⚡ Ofuscar</button>
-    <button class="btn-copy" onclick="copiarInput()">📋 Copiar original</button>
+  <label>Resultado:</label>
+  <textarea id="loadResult" readonly style="height:200px;"></textarea>
+  <div class="row">
+    <button class="btn-gray" onclick="copiarLoadstring()">📋 Copiar</button>
   </div>
 </div>
 
-<!-- OUTPUT -->
+<!-- OFUSCADOR -->
 <div class="card">
-  <label>Código ofuscado <span class="badge" id="charCount"></span></label>
-  <textarea id="outputCode" placeholder="El resultado aparecerá aquí..." readonly></textarea>
-  <div class="row" style="margin-top:0.75rem;">
-    <button class="btn-copy" onclick="copiarOutput()">📋 Copiar ofuscado</button>
-    <button class="btn-success" id="btnSubir" onclick="subirPastefy()" disabled>🚀 Subir a Pastefy</button>
+  <h3>① Ofuscador Lua</h3>
+  <label>Código Lua original</label>
+  <textarea id="inputCode" placeholder="Pega aquí tu código Lua..."></textarea>
+  <div class="row">
+    <button class="btn-purple" onclick="ofuscar()">⚡ Ofuscar</button>
+    <button class="btn-gray" onclick="copiarInput()">📋 Copiar original</button>
+  </div>
+</div>
+
+<!-- OUTPUT + PASTEFY -->
+<div class="card">
+  <h3>② Código ofuscado <span class="badge" id="charCount"></span></h3>
+  <label>Resultado</label>
+  <textarea id="outputCode" placeholder="El código ofuscado aparecerá aquí, o pega tu código directamente..."></textarea>
+  <div class="row">
+    <button class="btn-gray" onclick="copiarOutput()">📋 Copiar</button>
+    <button class="btn-green" id="btnSubir" onclick="subirPastefy()" disabled>🚀 Subir a Pastefy</button>
   </div>
   <div class="status" id="status"></div>
   <div class="raw-box" id="rawBox">
-    <label style="margin-top:0.75rem;">RAW link</label>
+    <label>RAW link generado</label>
     <div class="raw-url" id="rawUrl"></div>
-    <div class="row" style="margin-top:0.6rem;">
-      <button class="btn-copy" onclick="copiarRaw()">📋 Copiar RAW URL</button>
-      <button class="btn-link" onclick="abrirRaw()">🔗 Abrir RAW</button>
+    <div class="row">
+      <button class="btn-gray" onclick="copiarRaw()">📋 Copiar RAW URL</button>
+      <button class="btn-teal" onclick="abrirRaw()">🔗 Abrir RAW</button>
     </div>
   </div>
 </div>
 
-<!-- FORMATO LOADER -->
+<!-- FORMATO LOADER (el original que ya estaba) -->
 <div class="card">
-  <label>Generador de formato loader</label>
-  <input type="text" id="rawInput" placeholder="Pega aquí el RAW link de Pastefy..." oninput="generarFormato()"/>
+  <h3>③ Generador de formato loader</h3>
+  <label>Pega el RAW link de Pastefy</label>
+  <input type="text" id="rawInput" placeholder="https://pastefy.app/XXXXXXXX/raw" oninput="generarFormato()"/>
   <div style="margin-top:0.75rem;">
     <label>Plantilla personalizable</label>
     <input type="text" id="plantilla" value="loadstring(game:HttpGet('{URL}'))()" oninput="generarFormato()"/>
-    <p style="font-size:0.75rem;color:#666;margin-top:0.3rem;">Usa <code style="color:#a78bfa;background:#1f1f2e;padding:1px 5px;border-radius:4px;">{URL}</code> donde va el link RAW.</p>
+    <p style="font-size:0.75rem;color:#555;margin-top:0.3rem;">Usa <code style="color:#a78bfa;background:#1f1f2e;padding:1px 5px;border-radius:4px;">{URL}</code> donde va el link.</p>
   </div>
-  <div style="margin-top:0.75rem;">
-    <label>Resultado</label>
-    <div class="result-box" id="formatoResult"><span style="color:#555">El formato aparecerá aquí...</span></div>
+  <label>Resultado</label>
+  <div id="formatoResult" style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:0.6rem 0.75rem;font-family:'Consolas',monospace;font-size:0.85rem;color:#6ee7b7;min-height:40px;word-break:break-all;margin-top:0.35rem;">
+    <span style="color:#555">El formato aparecerá aquí...</span>
   </div>
-  <div class="row" style="margin-top:0.75rem;">
-    <button class="btn-copy" onclick="copiarFormato()">📋 Copiar formato</button>
-    <button class="btn-success" onclick="usarRawDeAbajo()">⬆ Usar RAW generado arriba</button>
+  <div class="row">
+    <button class="btn-gray" onclick="copiarFormato()">📋 Copiar formato</button>
+    <button class="btn-green" onclick="usarRawGenerado()">⬆ Usar RAW generado arriba</button>
   </div>
 </div>
 
+</div>
 <script>
 let lastRawUrl = '';
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('outputCode').addEventListener('input', function() {
+    document.getElementById('btnSubir').disabled = this.value.trim() === '';
+  });
+});
 
 function setStatus(msg, type) {
   const el = document.getElementById('status');
@@ -108,138 +129,24 @@ function setStatus(msg, type) {
   el.className = 'status ' + type;
 }
 
-// Convierte string a escape numérico Lua: "hola" -> "\104\111\108\097"
 function luaNumericEscape(str) {
-  let result = '"';
+  let r = '"';
   for (let i = 0; i < str.length; i++) {
-    const code = str.charCodeAt(i);
-    result += '\\' + String(code).padStart(3, '0');
+    r += '\\' + String(str.charCodeAt(i)).padStart(3, '0');
   }
-  result += '"';
-  return result;
+  return r + '"';
 }
 
-// Genera nombre de variable ofuscada tipo _A1, _B2, etc.
-function genVarName(index) {
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  const l = letters[index % letters.length];
-  const n = Math.floor(index / letters.length);
-  return '_' + l + (n > 0 ? n : '');
-}
-
-// Genera número ofuscado: 5 -> (3+2) o (10-5)
-function obfNum(n) {
-  const a = Math.floor(Math.random() * 1000);
-  const b = n + a;
-  return '(' + b + '-' + a + ')';
-}
-
-// Ofuscacion basica: solo escapa los strings con \xxx
 function basicObfuscate(code) {
-  // Reemplaza strings entre comillas con version escapada numericamente
   return code.replace(/(["'])((?:(?!\1)[^\\]|\\.)*)(\1)/g, (match, q, content) => {
     return luaNumericEscape(content);
   });
 }
 
-// Ofuscacion media: strings escapados + variables renombradas + numeros ofuscados
-function mediumObfuscate(code) {
-  const varMap = {};
-  let varIndex = 0;
-
-  // Primero renombra variables locales
-  code = code.replace(/\blocal\s+([a-zA-Z_][a-zA-Z0-9_]*)\b/g, (match, name) => {
-    if (!varMap[name]) {
-      varMap[name] = genVarName(varIndex++);
-    }
-    return 'local ' + varMap[name];
-  });
-
-  // Reemplaza usos de esas variables
-  for (const [orig, rep] of Object.entries(varMap)) {
-    const re = new RegExp('\\b' + orig + '\\b', 'g');
-    code = code.replace(re, rep);
-  }
-
-  // Escapa strings
-  code = code.replace(/(["'])((?:(?!\1)[^\\]|\\.)*)(\1)/g, (match, q, content) => {
-    return luaNumericEscape(content);
-  });
-
-  // Ofusca numeros literales simples
-  code = code.replace(/\b(\d{1,4})\b/g, (match, num) => {
-    const n = parseInt(num);
-    if (n > 9999) return match;
-    return obfNum(n);
-  });
-
-  return code;
-}
-
-// Ofuscacion maxima: tabla de strings + decoder + junk + todo lo de medio
-function heavyObfuscate(code) {
-  const strings = [];
-  const junkVars = [];
-
-  // Extrae todos los strings y los mete en tabla
-  let processed = code.replace(/(["'])((?:(?!\1)[^\\]|\\.)*)(\1)/g, (match, q, content) => {
-    const idx = strings.length;
-    strings.push(content);
-    return '__s[' + (idx + 1) + ']';
-  });
-
-  // Renombra variables locales
-  const varMap = {};
-  let varIndex = 0;
-  processed = processed.replace(/\blocal\s+([a-zA-Z_][a-zA-Z0-9_]*)\b/g, (match, name) => {
-    if (!varMap[name]) varMap[name] = genVarName(varIndex++);
-    return 'local ' + varMap[name];
-  });
-  for (const [orig, rep] of Object.entries(varMap)) {
-    const re = new RegExp('\\b' + orig + '\\b', 'g');
-    processed = processed.replace(re, rep);
-  }
-
-  // Ofusca numeros
-  processed = processed.replace(/\b(\d{1,4})\b/g, (match, num) => {
-    const n = parseInt(num);
-    if (isNaN(n) || n > 9999) return match;
-    return obfNum(n);
-  });
-
-  // Construye tabla de strings con escape numerico
-  let tableLines = 'local __s={';
-  const escapedStrings = strings.map(s => luaNumericEscape(s));
-  tableLines += escapedStrings.join(',') + '};';
-
-  // Genera junk variables con nombres y valores ofuscados
-  const junkCount = 8;
-  let junk = '';
-  for (let i = 0; i < junkCount; i++) {
-    const jName = '_x' + Math.random().toString(36).slice(2, 6);
-    const jVal = obfNum(Math.floor(Math.random() * 500));
-    junk += 'local ' + jName + '=' + jVal + ';';
-    junkVars.push(jName);
-  }
-
-  // Genera header estilo wearedevs
-  const ts = Date.now();
-  const header = '--[[ Obfuscated | ' + ts + ' ]]\n';
-
-  return header + tableLines + '\n' + junk + '\n' + processed;
-}
-
 function ofuscar() {
   const code = document.getElementById('inputCode').value.trim();
   if (!code) { setStatus('⚠ Pega código Lua primero.', 'err'); return; }
-
-  const level = parseInt(document.getElementById('level').value);
-  let result = '';
-
-  if (level === 1) result = basicObfuscate(code);
-  else if (level === 2) result = mediumObfuscate(code);
-  else result = heavyObfuscate(code);
-
+  const result = basicObfuscate(code);
   document.getElementById('outputCode').value = result;
   document.getElementById('btnSubir').disabled = false;
   document.getElementById('charCount').textContent = result.length + ' chars';
@@ -259,39 +166,49 @@ async function subirPastefy() {
     });
     const data = await res.json();
     if (data && data.paste && data.paste.id) {
-      const id = data.paste.id;
-      lastRawUrl = 'https://pastefy.app/' + id + '/raw';
+      lastRawUrl = 'https://pastefy.app/' + data.paste.id + '/raw';
       document.getElementById('rawUrl').textContent = lastRawUrl;
       document.getElementById('rawBox').style.display = 'block';
       setStatus('✅ Subido a Pastefy exitosamente.', 'ok');
-    } else { throw new Error('Respuesta inesperada'); }
+    } else { throw new Error('Respuesta inesperada de Pastefy'); }
   } catch(e) {
     setStatus('❌ Error: ' + e.message, 'err');
   }
   document.getElementById('btnSubir').disabled = false;
 }
 
-function copiarInput() {
-  const v = document.getElementById('inputCode').value;
-  if (!v) return;
-  navigator.clipboard.writeText(v);
-  setStatus('📋 Código original copiado.', 'ok');
+// Generador nuevo (arriba)
+function generar() {
+  const segundo = document.getElementById('url2').value.trim();
+  const codigo =
+`local function run(url)
+    task.spawn(function()
+        local ok, src = pcall(function()
+            return game:HttpGet(url)
+        end)
+        if ok and src then
+            local f, err = loadstring(src)
+            if f then
+                pcall(f)
+            else
+                warn(err)
+            end
+        else
+            warn("No se pudo obtener: "..url)
+        end
+    end)
+end
+run("https://pastefy.app/EPHCMCIX/raw")
+run("${segundo}")`;
+  document.getElementById('loadResult').value = codigo;
 }
-function copiarOutput() {
-  const v = document.getElementById('outputCode').value;
-  if (!v) return;
-  navigator.clipboard.writeText(v);
-  setStatus('📋 Código ofuscado copiado.', 'ok');
+
+function copiarLoadstring() {
+  const v = document.getElementById('loadResult').value;
+  if (v) { navigator.clipboard.writeText(v); alert('Código copiado.'); }
 }
-function copiarRaw() {
-  if (!lastRawUrl) return;
-  navigator.clipboard.writeText(lastRawUrl);
-  setStatus('📋 RAW URL copiada.', 'ok');
-}
-function abrirRaw() {
-  if (!lastRawUrl) return;
-  window.open(lastRawUrl, '_blank');
-}
+
+// Generador de formato loader (el original de abajo)
 function generarFormato() {
   const url = document.getElementById('rawInput').value.trim();
   const plantilla = document.getElementById('plantilla').value;
@@ -299,17 +216,33 @@ function generarFormato() {
   if (!url) { resultado.innerHTML = '<span style="color:#555">El formato aparecerá aquí...</span>'; return; }
   resultado.textContent = plantilla.replace('{URL}', url);
 }
+
 function copiarFormato() {
   const texto = document.getElementById('formatoResult').textContent;
   if (!texto || texto.includes('aparecerá')) { setStatus('⚠ No hay formato generado.', 'err'); return; }
   navigator.clipboard.writeText(texto);
   setStatus('📋 Formato copiado.', 'ok');
 }
-function usarRawDeAbajo() {
+
+function usarRawGenerado() {
   if (!lastRawUrl) { setStatus('⚠ Primero sube a Pastefy para obtener el RAW.', 'err'); return; }
   document.getElementById('rawInput').value = lastRawUrl;
   generarFormato();
-  document.getElementById('rawInput').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copiarInput() {
+  const v = document.getElementById('inputCode').value;
+  if (v) navigator.clipboard.writeText(v);
+}
+function copiarOutput() {
+  const v = document.getElementById('outputCode').value;
+  if (v) { navigator.clipboard.writeText(v); setStatus('📋 Copiado.', 'ok'); }
+}
+function copiarRaw() {
+  if (lastRawUrl) { navigator.clipboard.writeText(lastRawUrl); setStatus('📋 RAW copiado.', 'ok'); }
+}
+function abrirRaw() {
+  if (lastRawUrl) window.open(lastRawUrl, '_blank');
 }
 </script>
 </body>
